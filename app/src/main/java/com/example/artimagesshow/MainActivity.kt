@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,16 +51,25 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+data class Artwork(
+    @DrawableRes val imageRes: Int,
+    @StringRes val titleRes: Int,
+    @StringRes val artistRes: Int
+)
+
+
+val artworks = listOf(
+    Artwork(R.drawable.lemon_tree, R.string.artwork_title_1, R.string.artwork_artist_1),
+    Artwork(R.drawable.lemon_squeeze, R.string.artwork_title_2, R.string.artwork_artist_2),
+    Artwork(R.drawable.lemon_drink, R.string.artwork_title_3, R.string.artwork_artist_3),
+    Artwork(R.drawable.lemon_restart, R.string.artwork_title_4, R.string.artwork_artist_4)
+)
+
 @Composable
 fun ArtImagesShowLayout() {
     var currentIndex by remember { mutableIntStateOf(0) }
 
-    val (image, artworkTitle, artworkArtist) = when (currentIndex){
-        0 -> Triple(R.drawable.lemon_tree, R.string.artwork_title_1, R.string.artwork_artist_1)
-        1 -> Triple(R.drawable.lemon_squeeze, R.string.artwork_title_2, R.string.artwork_artist_2)
-        2 -> Triple(R.drawable.lemon_drink, R.string.artwork_title_3, R.string.artwork_artist_3)
-        else -> Triple(R.drawable.lemon_restart, R.string.artwork_title_4, R.string.artwork_artist_4)
-    }
+    val (image, artworkTitle, artworkArtist) = artworks[currentIndex]
 
     Column (
         modifier = Modifier
@@ -107,12 +117,12 @@ fun ArtImagesShowLayout() {
         ) {
             ArtImagesShowButton(text = R.string.button_1,
                 onClick = {
-                    currentIndex = (currentIndex - 1 + 4) % 4
+                    currentIndex = (currentIndex - 1 + artworks.size) % artworks.size
                 },
                 modifier = Modifier.padding(start = 20.dp))
             ArtImagesShowButton(text = R.string.button_2,
                 onClick = {
-                    currentIndex = (currentIndex + 1) % 4
+                    currentIndex = (currentIndex + 1) % artworks.size
                 },
                 modifier = Modifier.padding(end = 20.dp))
         }
